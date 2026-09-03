@@ -1,0 +1,7 @@
+# Optional specialist/domain-investing vocabulary examples.
+# Upload your own much larger word list from the app if needed.
+metaverse
+chiplet
+qubit
+fintech
+biotech

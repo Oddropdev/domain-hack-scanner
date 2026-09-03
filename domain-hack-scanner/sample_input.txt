@@ -1,0 +1,9 @@
+Dynadot / Namecheap style messy sample
+--------------------------------------
+12345    vir.us        $12.99      4 bids
+Auction  parasit.es    EUR 19.50   ends 2026-09-05
+https://realm.sh/something?ref=auction    renewal: 33.00
+sales@example.com                         <- email should be ignored
+12.99  2026.09  1.2.3                    <- numbers should be ignored
+vir.us                                    <- duplicate should be removed
+not-a-domain                              <- ignored
