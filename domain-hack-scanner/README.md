@@ -36,6 +36,8 @@ realm.sh
 
 Prices, currencies, bid counts, dates, IDs, comments and URL paths are ignored. Email addresses are excluded. Duplicates are removed while preserving first-seen order.
 
+**Letters-only screening:** hostname labels must contain only ASCII `a-z` letters. Digits, hyphens, underscores, symbols and non-ASCII characters invalidate the complete domain candidate; the parser never removes them to manufacture another domain. The label-separating `.` is allowed. URL prefixes and paths remain supported.
+
 File decoding falls back through UTF-8-SIG, UTF-8, Windows CP1252 and Latin-1.
 
 ## Dictionary model

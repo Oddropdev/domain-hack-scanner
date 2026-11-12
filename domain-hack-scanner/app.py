@@ -44,7 +44,8 @@ st.markdown(
 st.title("Domain Hack Scanner")
 st.caption(
     "Find dictionary-word domain hacks from messy expired-auction/export files. "
-    "Prices, IDs, notes and other surrounding text are ignored."
+    "Prices, IDs, notes and other surrounding text are ignored. "
+    "Names containing digits, hyphens or other non-ASCII letters are excluded."
 )
 
 with st.expander("What counts as a hit?", expanded=False):

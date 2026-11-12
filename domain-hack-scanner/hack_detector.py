@@ -136,7 +136,7 @@ def detect_domain_hack(
         return None
 
     sld, tld = domain.split(".", 1)
-    if not sld.isalpha() or not tld.isalpha():
+    if not (sld.isascii() and sld.isalpha() and tld.isascii() and tld.isalpha()):
         return None
 
     joined = sld + tld
