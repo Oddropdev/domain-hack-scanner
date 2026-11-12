@@ -18,6 +18,8 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install dependencies
-        run: pip install -r domain-hack-scanner/requirements-dev.txt
+        run: pip install -r requirements-dev.txt
+        working-directory: domain-hack-scanner
       - name: Run tests
-        run: python -m pytest -q domain-hack-scanner/tests
+        run: python -m pytest -q
+        working-directory: domain-hack-scanner
