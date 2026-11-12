@@ -54,3 +54,19 @@ def test_domain_validator_rejects_invalid_characters_in_any_label():
                  "a.1us", "a..us", "näme.us"]:
         assert not _valid_domain(name)
     assert _valid_domain("safe.domain.com")
+
+
+def test_single_quoted_domain_fields_remain_supported():
+    domains, _ = extract_domains("'vir.us','parasit.es'")
+    assert domains == ["vir.us", "parasit.es"]
+
+
+def test_embedded_quotes_do_not_salvage_invalid_hostname_fragments():
+    domains, _ = extract_domains("foo'vir.us 'parasit.es'")
+    assert domains == ["parasit.es"]
+
+
+def test_combining_marks_do_not_create_ascii_domain_fragments():
+    for text in ("vir.us\u0301", "vir.us\u0331", "v\u0301ir.us", "vir\u0331.us"):
+        domains, _ = extract_domains(text)
+        assert domains == [], (text, domains)
