@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass
 from typing import Iterable
 
@@ -9,7 +10,8 @@ from typing import Iterable
 # Candidate extraction includes invalid label characters so they can be
 # rejected in full; numeric prices and dates are rejected by _valid_domain.
 DOMAIN_RE = re.compile(
-    r"(?i)(?<![@\w.+!#$%&'*=?^`{|}~-])"
+    r"(?i)(?<![@\w.+!#$%&*=?^`{|}~-])"
+    r"(?<![\w]')"
     r"(?:https?://)?(?:www\.)?"
     r"((?:[a-z0-9_+-]{1,63}\.)+[a-z0-9_+-]{2,63})"
     r"(?::\d{1,5})?"
@@ -65,8 +67,20 @@ def extract_domains(text: str) -> tuple[list[str], ParseStats]:
     Intentionally ignores surrounding prices, auction IDs, currencies, labels,
     comments and URL paths. Email domains are excluded by the regex lookbehind.
     """
-    normalized = text or ""
-    raw_matches = [m.group(1).lower().rstrip(".") for m in DOMAIN_RE.finditer(normalized)]
+    # NFC composes decomposed accents instead of silently extracting ASCII fragments.
+    normalized = unicodedata.normalize("NFC", text or "")
+    raw_matches = []
+    for match in DOMAIN_RE.finditer(normalized):
+        # Some combining marks have no precomposed form and Python's \w
+        # does not include them. Neither may act as a domain delimiter.
+        boundaries = (match.start() - 1, match.end())
+        if any(
+            unicodedata.category(normalized[i]).startswith("M")
+            for i in boundaries
+            if 0 <= i < len(normalized)
+        ):
+            continue
+        raw_matches.append(match.group(1).lower().rstrip("."))
     valid_matches = [domain for domain in raw_matches if _valid_domain(domain)]
 
     unique_domains = list(dict.fromkeys(valid_matches))
